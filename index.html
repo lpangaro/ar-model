@@ -1,29 +1,19 @@
 <!doctype html>
-<html lang="es">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Abrir modelo en AR</title>
-<style>
-  html,body{height:100%;margin:0}
-  body{display:flex;align-items:center;justify-content:center;font-family:-apple-system,system-ui,sans-serif}
-  button{font-size:20px;padding:16px 22px;border-radius:14px;border:1px solid #ccc;background:white}
-</style>
-
-<button id="go">Abrir este modelo 3D</button>
-
+<title>AR</title>
+<a id="ar" rel="ar" href="./12_8_2025.usdz"></a>
 <script>
-  // Cambiá este nombre por el de tu archivo USDZ
-  const USDZ = '12_8_2025.usdz';
+// Intenta disparar el click apenas carga/recupera foco.
+// En varios iOS esto cuenta como interacción si llegaste desde un QR.
+const go = () => document.getElementById('ar').click();
 
-  // En iOS, abrir el .usdz dispara el prompt "¿Abrir este modelo 3D?"
-  document.getElementById('go').addEventListener('click', () => {
-    // opción A (recomendada)
-    window.location.href = USDZ;
+// distintos hooks que suelen funcionar según la versión de iOS
+window.addEventListener('pageshow', () => setTimeout(go, 0), { once: true });
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) setTimeout(go, 0);
+}, { once: true });
 
-    // opción B (equivalente) si preferís el enlace semántico:
-    // const a = document.createElement('a');
-    // a.rel = 'ar';
-    // a.href = USDZ;
-    // a.click();
-  });
+// Fallback duro: si nada funcionó en ~800ms, navegá al .usdz
+// (verás la vista 3D con el botón AR).
+setTimeout(() => { location.replace('./12_8_2025.usdz'); }, 800);
 </script>
-</html>
